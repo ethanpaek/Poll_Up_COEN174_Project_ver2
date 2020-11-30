@@ -188,9 +188,16 @@ var LivePreview = React.createClass({
         var progress = Math.round((option.vote_count / this.props.total_vote_count) * 100) || 0
         var current = {width: progress+"%"}
 
+        var input_type;
+        if (this.props.voting_method == 0) {
+            input_type = "radio";
+        } else if (this.props.voting_method == 1) {
+            input_type = "checkbox";
+        }
+                                   
         return (
           <div key={option.name}>
-            <input name="options" type="radio" value={option.name} onChange={this.handleOptionChange} /> {option.name}
+            <input name="options" type=input_type value={option.name} onChange={this.handleOptionChange} /> {option.name}
             <div className="progress">
               <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={progress}
               aria-valuemin="0" aria-valuemax="100" style={current}>
