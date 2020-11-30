@@ -53,24 +53,33 @@ class Polls(Base):
             'close_date': self.close_date,
             'status': self.status,
             'voting_method': self.voting_method,
+            'total_vote_count': self.total_vote_count,
             'winner': self.winner
         }
 
     @hybrid_property
-    def winner(self, total=0):
+    def winner(self):
         test = {}
         for option in self.options.all():
             if not option.option.name in test:
                 test[option.option.name] = option.vote_count
             else:
                 test[option.option.name] += option.vote_count
-
         return max(test, key=test.get)
 
+    @hybrid_property
+    def total_vote_count(self, total=0):
+        for option in self.options.all():
+            total += option.vote_count
+        return total
 
-#    @winner.expression
-#    def winner(cls):
-#        return select([func.sum(Votes.vote_count)]).where(Votes.poll_id == cls.id)
+    @total_vote_count.expression
+    def total_vote_count(cls):
+        return select([func.sum(Votes.vote_count)]).where(Votes.poll_id == cls.id)
+
+    @winner.expression
+    def winner(cls):
+        return select([func.sum(Votes.vote_count)]).where(Votes.poll_id == cls.id)
 
 
 # Model for poll options

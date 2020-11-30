@@ -68,7 +68,7 @@ def api_poll_vote():
 
     join_tables = Votes.query.join(Polls).join(Options)
 
-    # Get poll, username, and option from the database
+    # Get votes, poll, username, and option from the database
     poll = Polls.query.filter_by(title=poll_title, status=True).first()
     user = Users.query.filter_by(username=session['user']).first()
     option = Options.query.filter_by(name=option_name).first()
@@ -88,10 +88,13 @@ def api_poll_vote():
         
         # record userpoll and vote
         user_poll = UserPolls(poll_id=poll.id, user_id=user.id, option_id=option.id)
-        user_vote = Votes(poll_id=poll.id, user_id=user.id, option_id=option.id, vote_count=1)
+        user_vote = Votes(poll_id=poll.id, user_id=user.id, option_id=option.id, vote_count=0)
         
         db.session.add(user_poll)
         db.session.add(user_vote)
+
+        # increment vote_count by 1 if the option was found
+        option_name.vote_count += 1
         
         db.session.commit()
 
