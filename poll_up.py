@@ -135,4 +135,8 @@ def poll(poll_name):
 
 @poll_up.route('/about')
 def about():
-    return 'We can talk a little about who this API was developed by (us ofc) and the different polling methods here.'
+    return render_template('aboutme.html')
+
+@poll_up.route('/aboutthepolls')
+def aboutthepolls():
+    return render_template('aboutthepolls.html')
