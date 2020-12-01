@@ -41,7 +41,3 @@ Set the Flask app to poll_up.py
 Run the API:
 
 ```flask run ```
-
-### Testing the Program Online:
-
-## URL Path Guide:
