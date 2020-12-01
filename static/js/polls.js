@@ -32,7 +32,7 @@ var PollForm = React.createClass({
     close_date = close_date.getTime() / 1000;
 
 
-    return {title: '', option: '', options: [], close_date: close_date, all_options: []}
+    return {title: '', option: '', voting_method: '', options: [], close_date: close_date, all_options: []}
   },
 
   handleTitleChange: function(e){
@@ -42,6 +42,10 @@ var PollForm = React.createClass({
 
   handleOptionChange: function(e){
     this.setState({option: e.target.value});
+  },
+
+  handleVotingMethodChange: function(e){
+    this.setState({voting_method: e.target.value});
   },
 
   handleOptionAdd: function(e){
@@ -131,6 +135,38 @@ var PollForm = React.createClass({
           value={this.state.option ? this.state.option: ''} autoFocus />
         </div>
 
+        <p title="Free Web tutorials">Choose a Polling Method:</p>
+
+        <div className="form-group has-success">
+            <label htmlFor="FPTP" className="sr-only">FPTP</label>
+            <input name="options" type="radio" value="FPTP" onChange={this.handleVotingMethodChange} /> FPTP
+        </div>
+
+        <div className="form-group has-success">
+            <label htmlFor="Approval Voting" className="sr-only">Approval Voting</label>
+            <input name="options" type="radio" value="Approval Voting" onChange={this.handleVotingMethodChange} /> Approval Voting
+        </div>
+
+        <div className="form-group has-success">
+            <label htmlFor="Instant-Runoff Voting" className="sr-only">Instant-Runoff Voting</label>
+            <input name="options" type="radio" value="Instant-Runoff Voting" onChange={this.handleVotingMethodChange} /> Instant-Runoff Voting
+        </div>
+
+        <div className="form-group has-success">
+            <label htmlFor="Borda Count" className="sr-only">Borda Count</label>
+            <input name="options" type="radio" value="Borda Count" onChange={this.handleVotingMethodChange} /> Borda Count
+        </div>
+
+        <div className="form-group has-success">
+            <label htmlFor="Ranked Pairs" className="sr-only">Ranked Pairs</label>
+            <input name="options" type="radio" value="Ranked Pairs" onChange={this.handleVotingMethodChange} /> Ranked Pairs
+        </div>
+
+        <div className="form-group has-success">
+            <label htmlFor="Score Voting" className="sr-only">Score Voting</label>
+            <input name="options" type="radio" value="Score Voting" onChange={this.handleVotingMethodChange} /> Score Voting
+        </div>
+
         <datalist id="option">
           {all_options}
         </datalist>
@@ -165,11 +201,15 @@ var LivePreview = React.createClass({
     this.setState({selected_option: e.target.value });
   },
 
+  handleVotingMethodChange: function(e){
+    this.setState({voting_method: e.target.value});
+  },
+
 
   voteHandler: function(e){
     e.preventDefault();
 
-    var data = {"poll_title": this.props.title, "option": this.state.selected_option};
+    var data = {"poll_title": this.props.title, "option": this.state.selected_option, "voting_method": this.state.voting_method};
 
     //calls props handler
     this.props.voteHandler(data);
@@ -188,16 +228,14 @@ var LivePreview = React.createClass({
         var progress = Math.round((option.vote_count / this.props.total_vote_count) * 100) || 0
         var current = {width: progress+"%"}
 
-        var input_type;
-        if (this.props.voting_method == 0) {
-            input_type = "radio";
-        } else if (this.props.voting_method == 1) {
+        var input_type = "radio";
+        if (this.state.voting_method == "Approval Voting") {
             input_type = "checkbox";
         }
                                    
         return (
           <div key={option.name}>
-            <input name="options" type=input_type value={option.name} onChange={this.handleOptionChange} /> {option.name}
+            <input name="options" type={input_type} value={option.name} onChange={this.handleOptionChange} /> {option.name}
             <div className="progress">
               <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={progress}
               aria-valuemin="0" aria-valuemax="100" style={current}>

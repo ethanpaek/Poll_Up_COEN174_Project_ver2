@@ -100,7 +100,7 @@ def api_poll_vote():
 
         return jsonify({'message': 'Thank you for voting'})
     
-    return jsonify({'message': 'option or poll was not found please try again'})
+    return jsonify({'message': 'Option or poll was not found please try again'})
 
 
 @api.route('/poll/<poll_name>')
